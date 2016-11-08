@@ -17,9 +17,7 @@ public:
 
     int columnNum;          // column number, i.e. x coordinate
 
-
     std::set<int> constraints;
-
 
     Cell(){};
 
@@ -46,8 +44,5 @@ public:
     };
 
 };
-
-
-
 
 #endif //SUDOKUSOLVER_CELL_H

@@ -5,24 +5,16 @@
 
 #include "Grid.h"
 
-
 class BackTrackGrid: public Grid{
 
-
 public:
-
-
     BackTrackGrid(std::string input): Grid(input) {
     };
-
 
     // override
     bool solve() {
         return solveFrom(0, 0);
     }
-
-
-
 
     // DFS back track: left to right, top to bottom
     bool solveFrom(int row, int col) {
@@ -38,7 +30,6 @@ public:
         if(cells[row][col]->preFilled) {
             return solveFrom(col == GRID_DIM - 1 ? row + 1 : row, col == GRID_DIM - 1 ? 0 : col + 1);
         }
-
 
         // basic back track: try 1 ~ 9
         for(int val = 1; val <= GRID_DIM; val++) {
@@ -60,9 +51,6 @@ public:
     }
 
 };
-
-
-
 
 
 #endif //SUDOKUSOLVER_BACKTRACKGRID_H

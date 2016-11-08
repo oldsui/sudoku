@@ -12,7 +12,6 @@ int main() {
     printf("Input:\n");
     myGrid->print(2);
 
-
     if (myGrid->solve()) {
         printf("Solved!\n");
         printf("%d nodes expanded\n", myGrid->numNodesExpanded);
@@ -20,8 +19,6 @@ int main() {
     } else {
         printf("Not solved...\n");
     }
-
-
 
     return 0;
 }

@@ -53,7 +53,6 @@ public:
             }
         }
 
-
     }
 
     // validate current cell at [row, col] with value = val
@@ -111,7 +110,6 @@ public:
         printf("\n");
 
     }
-
 
 };
 
