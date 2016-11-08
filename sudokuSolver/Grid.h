@@ -6,13 +6,14 @@
 #include <string>
 #include <cassert>
 
-
+// comparator used to sort cells inside constrainedCells
 struct cellCmp {
     bool operator() (const Cell *c1, const Cell *c2) const {
         return c1->constraints.size() > c2->constraints.size();
     }
 };
 
+// base class, to be inherited by different methods, which implement solve()
 class Grid {
 
 public:
@@ -20,13 +21,10 @@ public:
     static const int SUBGRID_DIM = 3;
 
     int numNodesExpanded;
-
     std::set<Cell*, cellCmp> constrainedCells;
-
     Cell* cells[GRID_DIM][GRID_DIM];
 
-
-    //virtual bool solve();
+    //virtual bool solve()
     virtual bool solve() {
         return false;
     }
@@ -35,7 +33,6 @@ public:
     Grid(std::string input) {
 
         assert(input.length() == GRID_DIM * GRID_DIM);
-
         numNodesExpanded = 0;
 
         for (int i = 0; i < GRID_DIM; i++) {
@@ -44,7 +41,6 @@ public:
                 cells[i][j] = new Cell(curChar - '0', i, j);
             }
         }
-
         for(int i = 0; i < GRID_DIM; i++) {
             for (int j = 0; j < GRID_DIM; j++) {
                 if (!cells[i][j]->preFilled) {
@@ -52,7 +48,6 @@ public:
                 }
             }
         }
-
     }
 
     // validate current cell at [row, col] with value = val
@@ -64,14 +59,12 @@ public:
                 return false;
             }
         }
-
         // check duplicate on horizontal line
         for (int i = 0; i < GRID_DIM; i++) {
             if (col != i && cells[row][i]->value == val) {
                 return false;
             }
         }
-
         // validate sub grid
         int m = (row / SUBGRID_DIM) * SUBGRID_DIM;
         int n = (col / SUBGRID_DIM) * SUBGRID_DIM;
@@ -83,7 +76,6 @@ public:
                 if (cells[i][j]->value == val) {
                     return false;
                 }
-
             }
         }
         return true;
@@ -98,7 +90,6 @@ public:
             printf("__");
         }
         printf("\n");
-
         // print each line
         for (int i = 0; i < GRID_DIM; i++) {
             for (int j = 0; j < GRID_DIM; j++) {
@@ -106,9 +97,7 @@ public:
             }
             printf("\n");
         }
-
         printf("\n");
-
     }
 
 };
