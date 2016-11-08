@@ -2,10 +2,9 @@
 #ifndef SUDOKUSOLVER_BACKTRACKGRID_H
 #define SUDOKUSOLVER_BACKTRACKGRID_H
 
-
 #include "Grid.h"
 
-class BackTrackGrid: public Grid{
+class BackTrackGrid: public Grid {
 
 public:
     BackTrackGrid(std::string input): Grid(input) {
@@ -20,29 +19,23 @@ public:
     bool solveFrom(int row, int col) {
 
         // end condition
-        if(row == GRID_DIM) {
+        if (row == GRID_DIM) {
             return true;
         }
-
-        numNodesExpanded++;
-
         // skip pre-filled cells
-        if(cells[row][col]->preFilled) {
+        if (cells[row][col]->preFilled) {
             return solveFrom(col == GRID_DIM - 1 ? row + 1 : row, col == GRID_DIM - 1 ? 0 : col + 1);
         }
-
         // basic back track: try 1 ~ 9
-        for(int val = 1; val <= GRID_DIM; val++) {
-            if(isValid(row, col, val)) {
-
+        numNodesExpanded++;
+        for (int val = 1; val <= GRID_DIM; val++) {
+            if (isValid(row, col, val)) {
                 // Set value
                 cells[row][col]->value = val;
-
                 // continue from the next cell
-                if(solveFrom(col == GRID_DIM - 1 ? row + 1 : row, col == GRID_DIM - 1 ? 0 : col + 1)) {
+                if (solveFrom(col == GRID_DIM - 1 ? row + 1 : row, col == GRID_DIM - 1 ? 0 : col + 1)) {
                     return true;
                 }
-
                 // Reset value
                 cells[row][col]->value = Cell::EMPTY_VALUE;
             }
@@ -51,6 +44,5 @@ public:
     }
 
 };
-
 
 #endif //SUDOKUSOLVER_BACKTRACKGRID_H
