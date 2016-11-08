@@ -2,8 +2,7 @@
 a sudoku solver using different CSP methods
 
 
-
-Example in test.cc:
+Basic DFS method:
 Input:
 ______________________________________________________
 |__0__|__8__|__0__|__9__|__0__|__0__|__0__|__2__|__0__|
