@@ -36,7 +36,13 @@ public:
 
 
     void print() {
-        printf("%d ", this->value);
+        if (this->value != 0) {
+            printf("%d ", this->value);
+        }
+        else {
+            printf("  ");
+        }
+
     };
 
 };

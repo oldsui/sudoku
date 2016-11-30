@@ -8,6 +8,7 @@ class BackTrackGrid: public Grid {
 
 public:
     BackTrackGrid(std::string input): Grid(input) {
+
     };
 
 
@@ -24,36 +25,30 @@ public:
             return true;
         }
 
-        if (numSolvedCell == TOTAL_CELL) {
-            return true;
-        }
-
         // skip pre-filled cells
-        if (cells[row][col]->preFilled) {
+        if(cells[row][col]->preFilled)
             return solveFrom(col == GRID_DIM - 1 ? row + 1 : row, col == GRID_DIM - 1 ? 0 : col + 1);
-        }
 
         numNodesExpanded++;
 
-        // naive trials: try 1 ~ 9
-        for(int val = 1; val <= GRID_DIM; val++) {
+        // naively try 1 ~ 9
+        for(int val = 1; val <= GRID_DIM; val++)
 
-            // if this cell can be assigned to val
-            if(isValid(row, col, val)) {
+            if(isValid(row, col, val)) {            // if this cell can be assigned to val
 
-                // Set value
                 cells[row][col]->value = val;
                 numSolvedCell++;
 
-                // continue from the next cell
-                if (solveFrom(col == GRID_DIM - 1 ? row + 1 : row, col == GRID_DIM - 1 ? 0 : col + 1)) {
-                    return true;
-                }
 
+                // try from the next cell
+                if(solveFrom(col == GRID_DIM - 1 ? row + 1 : row, col == GRID_DIM - 1 ? 0 : col + 1))
+                    return true;
+
+                // revert to previous state
                 cells[row][col]->value = Cell::EMPTY_VALUE;
                 numSolvedCell--;
             }
-        }
+
         return false;
     }
 

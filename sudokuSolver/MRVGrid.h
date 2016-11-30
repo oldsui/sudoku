@@ -32,46 +32,38 @@ public:
 
     // MRV
     bool solve() {
-
         // end condition
-        if (frontier.size() == 0) {
+        if (frontier.size() == 0)
             return true;
-        }
 
         numNodesExpanded++;
 
         // find minimum-remaining-value variable
-        std::vector<Cell*>::iterator curNodeItr = findNextCandidate();
-        Cell* curNode = *curNodeItr;
-        frontier.erase(curNodeItr);
+        std::vector<Cell*>::iterator curCell_itr = findNextCandidate();
+        Cell* curCell = *curCell_itr;
+        frontier.erase(curCell_itr);
 
-
-
-        std::set<int> possibleValues = curNode->allowedValues;
+        std::set<int> possibleValues = curCell->allowedValues;
 
         for (std::set<int>::iterator it = possibleValues.begin(); it != possibleValues.end(); it++) {
             // try to assign the current value to this cell
             int curVal = *it;
             std::vector<Cell*> modifiedCells;
 
-            bool assignOK = assignCell(curNode, curVal, modifiedCells);
-            if(!assignOK) {
+            if(!assignCell(curCell, curVal, modifiedCells))
                 continue;
-            }
 
-            //printf("(%d, %d) := %d\n", curNode->rowNum, curNode->columnNum, curVal);
+
             numSolvedCell++;
 
-            if (solve()) {
+            if (solve())
                 return true;
-            }
 
             // reset to the previous state
-            curNode->value = 0;
-            frontier.push_back(curNode);
-            for (int i = 0; i < modifiedCells.size(); i++) {
+            curCell->value = 0;
+            //frontier.push_back(curCell);
+            for (int i = 0; i < modifiedCells.size(); i++)
                 modifiedCells[i]->allowedValues.insert(curVal);
-            }
         }
 
         return false;
