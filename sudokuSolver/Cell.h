@@ -17,30 +17,26 @@ public:
 
     int columnNum;          // column number, i.e. x coordinate
 
-    std::set<int> constraints;
+    std::set<int> allowedValues;
 
-    Cell(){};
+    Cell() {
+    };
 
     Cell(const int val, const int r, const int c) {
+
+        for (int i = 1; i < 10; i++) {
+            allowedValues.insert(i);
+        }
+
         this->preFilled = val != this->EMPTY_VALUE;
         this->value = val;
         this->rowNum = r;
         this->columnNum = c;
     }
 
-    void print(int margin = 1) {
-        printf("|");
-        for (int i = 0; i < margin; i++) {
-            printf("_");
-        }
-        printf("%d", this->value);
-        for (int i = 0; i < margin; i++) {
-            printf("_");
-        }
 
-        if (this->columnNum == 8) {
-            printf("|");
-        }
+    void print() {
+        printf("%d ", this->value);
     };
 
 };

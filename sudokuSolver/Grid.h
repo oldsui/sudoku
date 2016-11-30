@@ -5,13 +5,8 @@
 #include "Cell.h"
 #include <string>
 #include <cassert>
+#include <vector>
 
-// comparator used to sort cells inside constrainedCells
-struct cellCmp {
-    bool operator() (const Cell *c1, const Cell *c2) const {
-        return c1->constraints.size() > c2->constraints.size();
-    }
-};
 
 // base class, to be inherited by different methods, which implement solve()
 class Grid {
@@ -19,36 +14,67 @@ class Grid {
 public:
     static const int GRID_DIM = 9;
     static const int SUBGRID_DIM = 3;
+    static const int TOTAL_CELL = GRID_DIM * GRID_DIM;
 
     int numNodesExpanded;
     std::set<Cell*, cellCmp> constrainedCells;
     Cell* cells[GRID_DIM][GRID_DIM];
 
     //virtual bool solve()
+    int numSolvedCell;
+
+    std::vector<Cell*> frontier;
+    Cell* cells[GRID_DIM][GRID_DIM];
+
+
+
+    //virtual function, to be overridden by different versions
     virtual bool solve() {
+        printf("Error! Shouldn't reach here!\n");
         return false;
     }
 
     // Constructor
     Grid(std::string input) {
+        assert(input.length() == GRID_DIM * GRID_DIM);      // make sure string length is 81
 
-        assert(input.length() == GRID_DIM * GRID_DIM);
+        numSolvedCell = 0;
         numNodesExpanded = 0;
 
+        // initialize 81 cells
         for (int i = 0; i < GRID_DIM; i++) {
             for (int j = 0; j < GRID_DIM; j++) {
                 char curChar = input.at(i * GRID_DIM + j);
                 cells[i][j] = new Cell(curChar - '0', i, j);
+                if (curChar != '0') {
+                    numSolvedCell++;
+                }
             }
         }
+
+        // add to-be-assigned cells into frontier
         for(int i = 0; i < GRID_DIM; i++) {
             for (int j = 0; j < GRID_DIM; j++) {
-                if (!cells[i][j]->preFilled) {
-                    constrainedCells.insert(cells[i][j]);
+                bool shouldInsert = !cells[i][j]->preFilled;
+                if (shouldInsert) {
+                    frontier.push_back(cells[i][j]);
+                }
+            }
+        }
+
+
+        // reduce domains of pre-filled cells' conflicting cells
+        std::vector<Cell*> dummyVector;
+        for (int i = 0; i < GRID_DIM; i++) {
+            for (int j = 0; j < GRID_DIM; j++) {
+                if(!assignCell(cells[i][j], cells[i][j]->value, dummyVector)) {
+                    printf("Invalid input grid!\n");
                 }
             }
         }
     }
+
+
 
     // validate current cell at [row, col] with value = val
     bool isValid(int row, int col, int val) {
@@ -81,19 +107,85 @@ public:
         return true;
     }
 
-    void print(int margin = 1) {
 
-        for (int i = 0; i < GRID_DIM; i++) {
-            for (int j = 0; j < margin * 2; j++) {
-                printf("_");
+
+    // no need to check if val is from cell.allowedValues
+    bool assignCell(Cell* curCell, int val, std::vector<Cell*> &modifiedCells) {
+
+        curCell->value = val;
+        int row = curCell->rowNum;
+        int col = curCell->columnNum;
+        // reduce domain of cells in the same column
+        for(int i = 0; i < GRID_DIM; i++) {
+            if(i == row) {
+                continue;
             }
-            printf("__");
+            Cell* curCell = cells[i][col];
+            if (curCell->allowedValues.erase(val) > 0) {
+                modifiedCells.push_back(curCell);
+                if (curCell->allowedValues.size() == 0) {
+                    for (int i = 0; i < modifiedCells.size(); i++) {
+                        modifiedCells[i]->allowedValues.insert(val);
+                    }
+                    return false;
+                }
+            }
         }
-        printf("\n");
+
+        // reduce domain of cells in the same row
+        for(int i = 0; i < GRID_DIM; i++) {
+            if(i == col) {
+                continue;
+            }
+            Cell* curCell = cells[row][i];
+            if (curCell->allowedValues.erase(val) > 0) {
+                modifiedCells.push_back(curCell);
+                if (curCell->allowedValues.size() == 0) {
+                    for (int i = 0; i < modifiedCells.size(); i++) {
+                        modifiedCells[i]->allowedValues.insert(val);
+                    }
+                    return false;
+                }
+            }
+        }
+
+        // reduce domain of cells in the same sub-grid
+        int m = (row / SUBGRID_DIM) * SUBGRID_DIM;
+        int n = (col / SUBGRID_DIM) * SUBGRID_DIM;
+        for(int i = m; i < m + SUBGRID_DIM; i++) {
+            for (int j = n; j < n + SUBGRID_DIM; j++) {
+                if (i == row || j == col){                      // skip examined cells
+                    continue;
+                }
+                Cell* curCell = cells[i][j];
+                if (curCell->allowedValues.erase(val) > 0) {
+                    modifiedCells.push_back(curCell);
+                    if (curCell->allowedValues.size() == 0) {
+                        for (int i = 0; i < modifiedCells.size(); i++) {
+                            modifiedCells[i]->allowedValues.insert(val);
+                        }
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+
+
+    void print() {
         // print each line
         for (int i = 0; i < GRID_DIM; i++) {
             for (int j = 0; j < GRID_DIM; j++) {
-                cells[i][j]->print(margin);
+                cells[i][j]->print();
+                if ((j + 1) % SUBGRID_DIM == 0) {
+                    printf("|");
+                }
+            }
+            if ((i + 1) % SUBGRID_DIM == 0) {
+                printf("\n------+------+------");
             }
             printf("\n");
         }
