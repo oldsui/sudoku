@@ -12,9 +12,9 @@ int main() {
     //std::string testInput = "002008500640100908305009040721004050004000200090300784060500807108003062009200100";
 
 
-    //BackTrackGrid *myGrid = new BackTrackGrid(testInput);
+    BackTrackGrid *myGrid = new BackTrackGrid(testInput);
 
-    :MRVGrid *myGrid = new MRVGrid(testInput);
+    //MRVGrid *myGrid = new MRVGrid(testInput);
 
     printf("Input:\n");
     myGrid->print();
