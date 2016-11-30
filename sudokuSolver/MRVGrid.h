@@ -16,7 +16,7 @@ public:
 
     std::vector<Cell*>::iterator findNextCandidate() {
         std::vector<Cell*>::iterator res;
-        int minSize = 100;
+        int minSize = 10;
         std::vector<Cell*>::iterator it = frontier.begin();
         for (; it != frontier.end(); it++) {
             Cell *tmpCell = *it;
@@ -36,12 +36,13 @@ public:
         if (frontier.size() == 0)
             return true;
 
-        numNodesExpanded++;
-
         // find minimum-remaining-value variable
         std::vector<Cell*>::iterator curCell_itr = findNextCandidate();
         Cell* curCell = *curCell_itr;
         frontier.erase(curCell_itr);
+
+        numSolvedCell++;
+        numNodesExpanded++;
 
         std::set<int> possibleValues = curCell->allowedValues;
 
@@ -53,14 +54,13 @@ public:
             if(!assignCell(curCell, curVal, modifiedCells))
                 continue;
 
-
             numSolvedCell++;
 
             if (solve())
                 return true;
 
             // reset to the previous state
-            curCell->value = 0;
+            //curCell->value = 0;
             //frontier.push_back(curCell);
             for (int i = 0; i < modifiedCells.size(); i++)
                 modifiedCells[i]->allowedValues.insert(curVal);

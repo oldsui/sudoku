@@ -17,15 +17,11 @@ public:
     static const int TOTAL_CELL = GRID_DIM * GRID_DIM;
 
     int numNodesExpanded;
-    std::set<Cell*, cellCmp> constrainedCells;
-    Cell* cells[GRID_DIM][GRID_DIM];
-
-    //virtual bool solve()
     int numSolvedCell;
 
-    std::vector<Cell*> frontier;
     Cell* cells[GRID_DIM][GRID_DIM];
 
+    std::vector<Cell*> frontier;
 
 
     //virtual function, to be overridden by different versions
