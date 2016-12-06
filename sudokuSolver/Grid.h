@@ -18,6 +18,7 @@ public:
 
     int numNodesExpanded;
     int numSolvedCell;
+    int numBacktrack;
 
     Cell* cells[GRID_DIM][GRID_DIM];
 
@@ -36,6 +37,7 @@ public:
 
         numSolvedCell = 0;
         numNodesExpanded = 0;
+        numBacktrack = 0;
 
         // initialize 81 cells
         for (int i = 0; i < GRID_DIM; i++) {

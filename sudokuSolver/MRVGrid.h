@@ -42,7 +42,7 @@ public:
         frontier.erase(curCell_itr);
 
         numSolvedCell++;
-        numNodesExpanded++;
+        this->numNodesExpanded++;
 
         std::set<int> possibleValues = curCell->allowedValues;
 
@@ -59,13 +59,13 @@ public:
             if (solve())
                 return true;
 
-            // reset to the previous state
-            //curCell->value = 0;
-            //frontier.push_back(curCell);
+
             for (int i = 0; i < modifiedCells.size(); i++)
                 modifiedCells[i]->allowedValues.insert(curVal);
         }
-
+        curCell->value = 0;
+        frontier.push_back(curCell);
+        numBacktrack++;
         return false;
     }
 

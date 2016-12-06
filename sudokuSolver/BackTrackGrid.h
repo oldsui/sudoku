@@ -32,23 +32,24 @@ public:
         numNodesExpanded++;
 
         // naively try 1 ~ 9
-        for(int val = 1; val <= GRID_DIM; val++)
-
-            if(isValid(row, col, val)) {            // if this cell can be assigned to val
+        for(int val = 1; val <= GRID_DIM; val++) {
+            if (isValid(row, col, val)) {            // if this cell can be assigned to val
 
                 cells[row][col]->value = val;
                 numSolvedCell++;
 
 
                 // try from the next cell
-                if(solveFrom(col == GRID_DIM - 1 ? row + 1 : row, col == GRID_DIM - 1 ? 0 : col + 1))
+                if (solveFrom(col == GRID_DIM - 1 ? row + 1 : row, col == GRID_DIM - 1 ? 0 : col + 1))
                     return true;
 
                 // revert to previous state
                 cells[row][col]->value = Cell::EMPTY_VALUE;
                 numSolvedCell--;
             }
+        }
 
+        numBacktrack++;
         return false;
     }
 
