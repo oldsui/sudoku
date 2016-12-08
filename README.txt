@@ -1,8 +1,9 @@
 # sudoku
 a sudoku solver using different CSP methods
+1. naive backtrack
+2. foward checking with minimum remaining value heurstic
 
-
-Basic DFS method:
+Example:
 Input:
 ______________________________________________________
 |__0__|__8__|__0__|__9__|__0__|__0__|__0__|__2__|__0__|
