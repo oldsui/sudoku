@@ -1,7 +1,7 @@
 # sudoku
 a sudoku solver using different CSP methods
 1. naive backtrack
-2. foward checking with minimum remaining value heurstic
+2. forward checking with minimum remaining value heurstic
 
 Example:
 Input:
